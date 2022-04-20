@@ -1,12 +1,7 @@
 /* eslint-disable default-case */
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
-
-
-const initialState = {
-  entities: [],
-  filter: 'all',
-}
+import {combineReducers} from 'redux'
 
 export const filterReducer = (state = 'all', action) => {
   switch(action.type) {
@@ -36,13 +31,10 @@ export const todosReducer = (state = [], action) => {
   }
 }
 
-export const reducer = (state = initialState, action) => {
-  return {
-    entities: todosReducer(state.entities, action),
-    filter: filterReducer(state.filter, action),
-  }
-}
-
+export const reducer = combineReducers({
+  entities: todosReducer,
+  filter: filterReducer,
+})
 
 const selectTodos = state => {
   const {entities, filter} = state
