@@ -11,8 +11,16 @@ export const asyncMiddleware = store => next => action => {
   next(action)
 }
 
-export const fetchThunk = () => dispatch => {
-  console.log('soy un thunk', dispatch)
+export const fetchThunk = () => async dispatch => {
+  dispatch({ type: 'todos/pending' })
+  try{
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos')
+    const data = await response.json()
+    const todos = data.slice(0, 10)
+    dispatch({ type: 'todos/fulfilled', payload: todos })
+  } catch(e){
+    dispatch({ type: 'todos/error', error: e.message })
+  }
 }
 
 export const filterReducer = (state = 'all', action) => {
@@ -24,8 +32,30 @@ export const filterReducer = (state = 'all', action) => {
   }
 }
 
+const initialFetching = { loading: 'idle', error: null }
+
+export const fetchingReducer = (state = initialFetching, action) => {
+  switch(action.type) {
+    case 'todos/pending': {
+      return {...state, loading: 'pending'}
+    }
+    case 'todos/fulfilled': {
+      return {...state, loading: 'succeded'}
+    }
+    case 'todos/error': {
+      return { error: action.error, loading: 'rejected' }
+    }
+    default: {
+      return state
+    }
+  }
+}
+
 export const todosReducer = (state = [], action) => {
   switch(action.type) {
+    case 'todos/fulfilled': {
+      return action.payload
+    }
     case 'ADD_TODO': {
       return state.concat({ ...action.payload})
     }
