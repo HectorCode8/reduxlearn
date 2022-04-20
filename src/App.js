@@ -1,9 +1,18 @@
 /* eslint-disable default-case */
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
+
+
 const initialState = {
   entities: [],
   filter: 'all',
+}
+
+export const reducer = (state = initialState, action) => {
+  return {
+    entities: todosReducer(state.entities, action),
+    filter: filterReducer(state.filter, action),
+  }
 }
 
 export const reducer = (state = initialState, action) => {
