@@ -74,12 +74,15 @@ export const todosReducer = (state = [], action) => {
 }
 
 export const reducer = combineReducers({
-  entities: todosReducer,
+  todos: combineReducers({
+    entities: todosReducer,
+    status: fetchingReducer,
+  }),
   filter: filterReducer,
 })
 
 const selectTodos = state => {
-  const {entities, filter} = state
+  const {todos: {entities}, filter} = state
 
   if(filter === 'complete') {
     return entities.filter(todo => todo.completed)
@@ -90,6 +93,9 @@ const selectTodos = state => {
   }
   return entities
 }
+
+
+const selectStatus = state => state.todos.status
 
 const TodoItem = ({todo}) => {
   const dispatch = useDispatch()
@@ -105,7 +111,9 @@ const TodoItem = ({todo}) => {
 const App = () => {
   const [value, setValue] = useState('')
   const dispatch = useDispatch()
+
   const todos = useSelector(selectTodos)
+  const status = useSelector(selectStatus)
   
 
   const submit = e => {
@@ -118,6 +126,16 @@ const App = () => {
     dispatch({type: 'ADD_TODO', payload: todo})
     setValue(' ')
   }
+
+  if(status.loading === 'pending') {
+    return <p>Cargando....</p>
+  }
+
+  if(status.loading === 'rejected') {
+    return <p>{status.error}}</p>
+  }
+
+
   return(
     <div>
       <form onSubmit={submit}>
