@@ -8,6 +8,34 @@ const initialState = {
   filter: 'all',
 }
 
+export const filterReducer = (state = 'all', action) => {
+  switch(action.type) {
+    case 'filter/set':
+      return action.payload
+    default:
+      return state
+  }
+}
+
+export const todosReducer = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_TODO': {
+      return state.concat({ ...action.payload})
+    }
+    case 'todo/complete': {
+      const newTodos = state.map(todo => {
+        if(todo.id === action.payload.id) {
+          return {...todo, completed: !todo.completed}
+        }
+        return todo
+      })
+      return newTodos
+    }
+    default: 
+      return state
+  }
+}
+
 export const reducer = (state = initialState, action) => {
   return {
     entities: todosReducer(state.entities, action),
@@ -15,36 +43,6 @@ export const reducer = (state = initialState, action) => {
   }
 }
 
-export const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'ADD_TODO':{
-      return {
-        ...state,
-        entities: [...state.entities.concat({...action.payload})]
-      }
-    }
-    case 'todo/complete': {
-      const  newTodos = state.entities.map(todo => {
-        if (todo.id === action.payload.id) {
-          return {...todo, completed: !todo.completed}
-        }
-
-        return todo
-      })
-      return {
-        ...state,
-        entities: newTodos
-      }
-    }
-    case 'filter/set': {
-      return {
-        ...state,
-        filter: action.payload,
-      }
-    }
-  }
-  return state
-}
 
 const selectTodos = state => {
   const {entities, filter} = state
