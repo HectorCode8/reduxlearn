@@ -27,6 +27,15 @@ export const fetchingReducer = makeFetchingReducer([
   'todos/rejected',
 ])
 
+const fulfillerdReducer = (state, action) => {
+  switch(action.type) {
+    case 'todos/fulfilled': {
+      return action.payload
+    }
+    default:
+      return state
+  }
+}
   
 export const todosReducer = (state = [], action) => {
   switch(action.type) {
