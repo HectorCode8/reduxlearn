@@ -80,5 +80,4 @@ export const selectTodos = state => {
     return entities
   }
   
-  
 export const selectStatus = state => state.todos.status
