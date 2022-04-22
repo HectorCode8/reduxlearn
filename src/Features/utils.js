@@ -1,5 +1,15 @@
+
 export const reduceReducers = (...reducers) => (state, action) => 
 reducers.reduce((acc, el) => el(acc, action), state)
+
+export const mac = (type, ...argNames) =>
+(...args) => {
+  const action = { type }
+  argNames.forEach((arg, index) => {
+    action[argNames[index]] = args[index]
+  })
+  return action
+}
 
 const initialFetching = { loading: 'idle', error: null }
 export const makeFetchingReducer = actions => (state = initialFetching, action) => {

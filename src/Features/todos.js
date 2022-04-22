@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux'
-import { makeFetchingReducer, makeSetReducer, reduceReducers, makeCrudReducer } from './utils'
+import { mac, makeFetchingReducer, makeSetReducer, reduceReducers, makeCrudReducer } from './utils'
 
-export const setPending = () => ({type: 'todos/setPending'})
-export const setFulfilled = payload => ({ type: 'todos/fulfilled', payload })
-export const setError = e => ({ type: 'todos/error', error: e.message })
-export const setComplete = (payload) => ({type: 'todo/complete', payload})
-export const setFilter = payload => ({type: 'filter/set', payload})
+export const setPending = mac('todos/pending')
+export const setFulfilled = mac('todos/fulfilled', 'payload')
+export const setError = mac ('todos/error', 'error')
+export const setComplete = mac ('todo/complete', 'payload')
+export const setFilter = mac ('filter/set', 'payload')
 
 export const fetchThunk = () => async (dispatch) => {
     dispatch(setPending())
@@ -15,7 +15,7 @@ export const fetchThunk = () => async (dispatch) => {
       const todos = data.slice(0, 10)
       dispatch(setFulfilled(todos))
     } catch(e){
-      dispatch(setError())
+      dispatch(setError(e.message))
     }
   }
 
