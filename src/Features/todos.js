@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux'
-import { mac, makeFetchingReducer, makeSetReducer, reduceReducers, makeCrudReducer } from './utils'
+import { asyncMac, mac, mat, makeFetchingReducer, makeSetReducer, reduceReducers, makeCrudReducer } from './utils'
 
-export const setPending = mac('todos/pending')
-export const setFulfilled = mac('todos/fulfilled', 'payload')
-export const setError = mac ('todos/error', 'error')
+const asyncTodos = mat('todos')
+
+const [setPending, setFulfilled, setError] = asyncMac(asyncTodos)
 export const setComplete = mac ('todo/complete', 'payload')
 export const setFilter = mac ('filter/set', 'payload')
 
@@ -21,11 +21,7 @@ export const fetchThunk = () => async (dispatch) => {
 
 export const filterReducer = makeSetReducer(['filter/set'])
   
-export const fetchingReducer = makeFetchingReducer([
-  'todos/pending',
-  'todos/fulfilled',
-  'todos/rejected',
-])
+export const fetchingReducer = makeFetchingReducer([asyncTodos])
 
 
 const fulfillerdReducer = makeSetReducer(['todos/fulfilled'])

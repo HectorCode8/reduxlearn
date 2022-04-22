@@ -2,6 +2,10 @@
 export const reduceReducers = (...reducers) => (state, action) => 
 reducers.reduce((acc, el) => el(acc, action), state)
 
+export const mat = entity => ([ `${entity}/pendding`, 
+                              `${entity}/fulfilled`, 
+                              `${entity}/rejected` ])
+
 export const mac = (type, ...argNames) =>
 (...args) => {
   const action = { type }
@@ -10,6 +14,12 @@ export const mac = (type, ...argNames) =>
   })
   return action
 }
+
+export const asyncMac = asyncTypes => ([
+  mac(asyncTypes[0]),
+  mac(asyncTypes[1], 'payload'),
+  mac(asyncTypes[2], 'error'),
+])
 
 const initialFetching = { loading: 'idle', error: null }
 export const makeFetchingReducer = actions => (state = initialFetching, action) => {
