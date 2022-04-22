@@ -1,3 +1,5 @@
+export const reduceReducers = (...reducers) => (state, action) => 
+reducers.reduce((acc, el) => el(acc, action), state)
 
 const initialFetching = { loading: 'idle', error: null }
 export const makeFetchingReducer = actions => (state = initialFetching, action) => {
